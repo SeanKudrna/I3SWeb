@@ -23,11 +23,13 @@ export default async function handler(req, res) {
     return res.redirect(`${process.env.FRONTEND_URL}?auth=error&reason=no_state`);
   }
   
-  // Extract code_verifier from state (format: "state:codeVerifier")
-  const [stateValue, codeVerifier] = state.split(':');
+  // Extract code_verifier from combined state
+  // State format: first 32 chars are state, rest is codeVerifier
+  const stateValue = state.substring(0, 32);
+  const codeVerifier = state.substring(32);
   
-  if (!codeVerifier) {
-    console.error('Could not extract code_verifier from state');
+  if (!codeVerifier || codeVerifier.length < 20) {
+    console.error('Could not extract valid code_verifier from state');
     return res.redirect(`${process.env.FRONTEND_URL}?auth=error&reason=invalid_state`);
   }
   

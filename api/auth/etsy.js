@@ -31,7 +31,9 @@ export default async function handler(req, res) {
   authUrl.searchParams.append('client_id', process.env.ETSY_KEYSTRING);
   authUrl.searchParams.append('redirect_uri', baseRedirectUri);
   authUrl.searchParams.append('scope', 'listings_r shops_r');
-  authUrl.searchParams.append('state', state + ':' + codeVerifier); // Combine state and verifier
+  // Encode state and verifier together without special characters
+  const combinedState = state + codeVerifier;
+  authUrl.searchParams.append('state', combinedState);
   authUrl.searchParams.append('code_challenge', codeChallenge);
   authUrl.searchParams.append('code_challenge_method', 'S256');
   
@@ -49,6 +51,7 @@ export default async function handler(req, res) {
     authUrl: authUrl.toString(), 
     state: state,
     codeVerifier: codeVerifier,
+    combinedState: combinedState, // For callback parsing
     redirectUri: baseRedirectUri // Include for debugging
   });
 }
