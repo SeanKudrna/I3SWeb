@@ -1,5 +1,5 @@
-const axios = require('axios');
-const { ETSY_API_BASE, SHOP_ID, accessToken, ensureValidToken } = require('./_lib/auth');
+import axios from 'axios';
+import { ETSY_API_BASE, SHOP_ID, accessToken, ensureValidToken } from './_lib/auth.js';
 
 export default async function handler(req, res) {
   // Enable CORS

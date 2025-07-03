@@ -1,4 +1,4 @@
-const { tokenStorage } = require('../_lib/auth');
+import { isAuthenticated } from '../_lib/tokenStorage.js';
 
 export default async function handler(req, res) {
   // Enable CORS
@@ -15,11 +15,11 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const isAuthenticated = tokenStorage.isAuthenticated();
+  const isAuth = isAuthenticated();
   
   res.json({
-    adminAuthenticated: isAuthenticated,
-    message: isAuthenticated 
+    adminAuthenticated: isAuth,
+    message: isAuth 
       ? 'Shop owner has authenticated - all visitors can see products'
       : 'Shop owner needs to authenticate once for all visitors to see products'
   });

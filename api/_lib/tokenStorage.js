@@ -17,30 +17,31 @@ if (process.env.STORED_ACCESS_TOKEN) {
   storedTokens.isAdminAuthenticated = true;
 }
 
-module.exports = {
-  getTokens: () => storedTokens,
-  setTokens: (accessToken, refreshToken, tokenExpiry) => {
-    storedTokens.accessToken = accessToken;
-    storedTokens.refreshToken = refreshToken;
-    storedTokens.tokenExpiry = tokenExpiry;
-    storedTokens.isAdminAuthenticated = true;
-    
-    // Log for admin to copy to environment variables
-    console.log('=== ADMIN: COPY THESE TO VERCEL ENVIRONMENT VARIABLES ===');
-    console.log('STORED_ACCESS_TOKEN=' + accessToken);
-    console.log('STORED_REFRESH_TOKEN=' + refreshToken);
-    console.log('STORED_TOKEN_EXPIRY=' + tokenExpiry);
-    console.log('=== END - Set these in Vercel dashboard ===');
-  },
-  clearTokens: () => {
-    storedTokens.accessToken = null;
-    storedTokens.refreshToken = null;
-    storedTokens.tokenExpiry = null;
-    storedTokens.isAdminAuthenticated = false;
-  },
-  isAuthenticated: () => {
-    return storedTokens.isAdminAuthenticated && 
-           storedTokens.accessToken && 
-           Date.now() < storedTokens.tokenExpiry;
-  }
+export const getTokens = () => storedTokens;
+
+export const setTokens = (accessToken, refreshToken, tokenExpiry) => {
+  storedTokens.accessToken = accessToken;
+  storedTokens.refreshToken = refreshToken;
+  storedTokens.tokenExpiry = tokenExpiry;
+  storedTokens.isAdminAuthenticated = true;
+  
+  // Log for admin to copy to environment variables
+  console.log('=== ADMIN: COPY THESE TO VERCEL ENVIRONMENT VARIABLES ===');
+  console.log('STORED_ACCESS_TOKEN=' + accessToken);
+  console.log('STORED_REFRESH_TOKEN=' + refreshToken);
+  console.log('STORED_TOKEN_EXPIRY=' + tokenExpiry);
+  console.log('=== END - Set these in Vercel dashboard ===');
+};
+
+export const clearTokens = () => {
+  storedTokens.accessToken = null;
+  storedTokens.refreshToken = null;
+  storedTokens.tokenExpiry = null;
+  storedTokens.isAdminAuthenticated = false;
+};
+
+export const isAuthenticated = () => {
+  return storedTokens.isAdminAuthenticated && 
+         storedTokens.accessToken && 
+         Date.now() < storedTokens.tokenExpiry;
 };

@@ -1,4 +1,4 @@
-const { accessToken, tokenExpiry } = require('../_lib/auth');
+import { accessToken, tokenExpiry } from '../_lib/auth.js';
 
 export default async function handler(req, res) {
   // Enable CORS

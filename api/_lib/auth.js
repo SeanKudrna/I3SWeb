@@ -1,11 +1,10 @@
-const crypto = require('crypto');
-const axios = require('axios');
+import crypto from 'crypto';
+import axios from 'axios';
+import * as tokenStorage from './tokenStorage.js';
 
 // Etsy API configuration
 const ETSY_API_BASE = 'https://openapi.etsy.com/v3';
 const SHOP_NAME = 'Innovative3DShop';
-
-const tokenStorage = require('./tokenStorage');
 
 // Shop ID cache
 let SHOP_ID = null;
@@ -145,20 +144,21 @@ async function ensureValidToken() {
   return true;
 }
 
-module.exports = {
+export {
   ETSY_API_BASE,
   SHOP_NAME,
-  accessToken: () => tokenStorage.getTokens().accessToken,
-  refreshToken: () => tokenStorage.getTokens().refreshToken,
-  tokenExpiry: () => tokenStorage.getTokens().tokenExpiry,
-  SHOP_ID: () => SHOP_ID,
   oauthSessions,
-  setTokens: (access, refresh, expiry) => {
-    tokenStorage.setTokens(access, refresh, expiry);
-  },
   getUserIdFromToken,
   getShopId,
   refreshAccessToken,
   ensureValidToken,
   tokenStorage
+};
+
+export const accessToken = () => tokenStorage.getTokens().accessToken;
+export const refreshToken = () => tokenStorage.getTokens().refreshToken;
+export const tokenExpiry = () => tokenStorage.getTokens().tokenExpiry;
+export const SHOP_ID = () => SHOP_ID;
+export const setTokens = (access, refresh, expiry) => {
+  tokenStorage.setTokens(access, refresh, expiry);
 };

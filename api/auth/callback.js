@@ -1,5 +1,4 @@
-const axios = require('axios');
-const crypto = require('crypto');
+import axios from 'axios';
 
 export default async function handler(req, res) {
   if (req.method !== 'GET') {
