@@ -10,6 +10,7 @@ import ProductsPage from './pages/ProductsPage';
 import ProductDetailPage from './pages/ProductDetailPage';
 import SearchPage from './pages/SearchPage';
 import AboutPage from './pages/AboutPage';
+import OAuthCallbackPage from './pages/OAuthCallbackPage';
 
 const App: React.FC = () => {
   return (
@@ -23,6 +24,7 @@ const App: React.FC = () => {
           <Route path="/search" element={<SearchPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/reviews" element={<SearchPage />} />
+          <Route path="/oauth/callback" element={<OAuthCallbackPage />} />
           <Route path="*" element={<div>404 - Page Not Found</div>} />
         </Routes>
       </Layout>

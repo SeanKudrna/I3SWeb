@@ -76,10 +76,10 @@ class EtsyApiService {
   /**
    * Get OAuth authorization URL
    */
-  async getAuthUrl(): Promise<string> {
+  async getAuthUrl(): Promise<{ authUrl: string; state: string; codeVerifier: string }> {
     try {
       const response = await this.api.get('/api/auth/etsy');
-      return response.data.authUrl;
+      return response.data;
     } catch (error) {
       console.error('Error getting auth URL:', error);
       throw error;
@@ -91,7 +91,13 @@ class EtsyApiService {
    */
   async authenticate(): Promise<void> {
     try {
-      const authUrl = await this.getAuthUrl();
+      const { authUrl, state, codeVerifier } = await this.getAuthUrl();
+      
+      // Store state and codeVerifier in sessionStorage for the callback
+      sessionStorage.setItem('oauth_state', state);
+      sessionStorage.setItem('oauth_code_verifier', codeVerifier);
+      
+      // Redirect to Etsy OAuth
       window.location.href = authUrl;
     } catch (error) {
       console.error('Error initiating authentication:', error);

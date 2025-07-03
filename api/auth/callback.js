@@ -8,22 +8,26 @@ export default async function handler(req, res) {
 
   const { code, state } = req.query;
   
-  console.log('OAuth callback received:', { code: !!code, state: !!state });
+  console.log('OAuth callback received:', { 
+    code: !!code, 
+    state: !!state
+  });
   
   if (!code) {
     console.error('No authorization code received');
     return res.redirect(`${process.env.FRONTEND_URL}?auth=error&reason=no_code`);
   }
   
-  let codeVerifier;
-  try {
-    // Extract code_verifier from state
-    const decodedState = Buffer.from(state, 'base64').toString();
-    const stateData = JSON.parse(decodedState);
-    codeVerifier = stateData.codeVerifier;
-    console.log('Extracted code_verifier from state:', !!codeVerifier);
-  } catch (error) {
-    console.error('Error parsing state:', error);
+  if (!state) {
+    console.error('No state parameter received');
+    return res.redirect(`${process.env.FRONTEND_URL}?auth=error&reason=no_state`);
+  }
+  
+  // Extract code_verifier from state (format: "state:codeVerifier")
+  const [stateValue, codeVerifier] = state.split(':');
+  
+  if (!codeVerifier) {
+    console.error('Could not extract code_verifier from state');
     return res.redirect(`${process.env.FRONTEND_URL}?auth=error&reason=invalid_state`);
   }
   
@@ -31,11 +35,14 @@ export default async function handler(req, res) {
     
     console.log('Exchanging code for tokens...');
     
+    // Use exact redirect URI that matches Etsy app settings
+    const redirectUri = process.env.REDIRECT_URI || 'https://i3s-web.vercel.app/api/auth/callback';
+    
     // Exchange code for access token
     const tokenData = new URLSearchParams({
       grant_type: 'authorization_code',
       client_id: process.env.ETSY_KEYSTRING,
-      redirect_uri: process.env.REDIRECT_URI,
+      redirect_uri: redirectUri,
       code: code,
       code_verifier: codeVerifier
     });
